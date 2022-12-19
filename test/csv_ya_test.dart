@@ -34,8 +34,39 @@ void main() {
       ]);
     });
 
+    test('Field Test', () {
+      expect(parseCsv('a,b'), [
+        ['a', 'b'],
+      ]);
+      expect(parseCsv('a,'), [
+        ['a', ''],
+      ]);
+      expect(parseCsv(',a'), [
+        ['', 'a'],
+      ]);
+      expect(parseCsv('a'), [
+        ['a'],
+      ]);
+      expect(parseCsv(''), <List<String>>[]);
+    });
+
     test('Multi Line Test', () {
+      expect(parseCsv('a,b,c\r\n'), [
+        ['a', 'b', 'c'],
+      ]);
       expect(parseCsv('a,b,c\r\nd,e,f'), [
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+      ]);
+      expect(parseCsv('a,b,c\r\nd,e,f\r\n'), [
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+      ]);
+      expect(parseCsv('a,b,c\nd,e,f\n'), [
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+      ]);
+      expect(parseCsv('a,b,c\r\nd,e,f\n'), [
         ['a', 'b', 'c'],
         ['d', 'e', 'f'],
       ]);
