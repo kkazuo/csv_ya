@@ -21,14 +21,17 @@ void main() {
       ]);
     });
 
-    test('Chunked Decoder Test', () {
+    test('Chunked Decoder Test', () async {
       final c = StreamController<String>();
       c.sink.add('a,b,c');
+      c.sink.close();
 
       expect(
-        () => c.stream.transform(decoder).expand((element) => element).toList(),
-        //[['a', 'b', 'c']]
-        throwsUnsupportedError,
+        await c.stream.transform(decoder).expand((element) => element).toList(),
+        [
+          ['a', 'b', 'c']
+        ],
+        //throwsUnsupportedError,
       );
     });
 
@@ -72,7 +75,22 @@ void main() {
       expect(parseCsv('a'), [
         ['a'],
       ]);
+      expect(parseCsv(','), [
+        ['', ''],
+      ]);
+      expect(parseCsv(',\r\n'), [
+        ['', ''],
+      ]);
+      expect(parseCsv(',,'), [
+        ['', '', ''],
+      ]);
+      expect(parseCsv(',,\r\n'), [
+        ['', '', ''],
+      ]);
       expect(parseCsv(''), <List<String>>[]);
+      expect(parseCsv('\r\n'), <List<String>>[
+        ['']
+      ]);
     });
 
     test('Multi Line Test', () {
@@ -124,6 +142,9 @@ void main() {
       ]);
       expect(parseCsv(' "a b" ,x'), [
         ['a b', 'x']
+      ]);
+      expect(parseCsv('"a,b" ,x'), [
+        ['a,b', 'x']
       ]);
       expect(parseCsv('"a b\n",x'), [
         ['a b\n', 'x']

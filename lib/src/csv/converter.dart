@@ -69,7 +69,6 @@ class _Sink extends ChunkedConversionSink<String> {
   @override
   void add(String chunk) {
     for (final a in chunk.runes) {
-      print('A: $a $_str $_fld $_rec $_csv');
       switch (a) {
         case nl:
           _quo = false;
@@ -100,12 +99,10 @@ class _Sink extends ChunkedConversionSink<String> {
           break;
       }
     }
-    print('B: $_str $_fld $_rec $_csv');
     if (_csv.isNotEmpty) {
       _sink.add(_csv);
       _csv = <List<String>>[];
     }
-    print('C: $_str $_fld $_rec $_csv');
   }
 
   void _onSep(int a) {
@@ -173,16 +170,13 @@ class _Sink extends ChunkedConversionSink<String> {
 
   @override
   void close() {
-    print('1: $_str $_fld $_rec');
     if (_str.isNotEmpty || _snd) {
       _onSep(sep);
     }
-    print('2: $_str $_fld $_rec');
     if (_rec.isNotEmpty) {
       _csv.add(_rec);
       _rec = <String>[];
     }
-    print('3: $_str $_fld $_rec');
     if (_csv.isNotEmpty) {
       _sink.add(_csv);
       _csv = <List<String>>[];
