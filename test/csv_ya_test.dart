@@ -1,10 +1,35 @@
+import 'dart:async';
+
 import 'package:csv_ya/csv_ya.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('A group of tests', () {
+    late CsvDecoder decoder;
+
     setUp(() {
       // Additional setup goes here.
+      decoder = CsvDecoder();
+    });
+
+    test('Decoder Test', () {
+      expect(decoder.convert('a,b,c'), [
+        ['a', 'b', 'c']
+      ]);
+      expect(decoder.convert('a,b,c\r\n'), [
+        ['a', 'b', 'c']
+      ]);
+    });
+
+    test('Chunked Decoder Test', () {
+      final c = StreamController<String>();
+      c.sink.add('a,b,c');
+
+      expect(
+        () => c.stream.transform(decoder).expand((element) => element).toList(),
+        //[['a', 'b', 'c']]
+        throwsUnsupportedError,
+      );
     });
 
     test('First Test', () {

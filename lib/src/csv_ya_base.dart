@@ -1,10 +1,7 @@
-import 'package:csv_ya/src/csv/definition.dart';
-import 'package:csv_ya/src/csv/types.dart';
+import 'package:csv_ya/csv_ya.dart';
 
-export 'csv/definition.dart';
+export 'csv/converter.dart';
 export 'csv/types.dart';
 
-final _csvParser = CsvDefinition().build<Csv>();
-
 /// Converts the given string [input] to its corresponding csv.
-Csv parseCsv(String input) => _csvParser.parse(input).value;
+Csv parseCsv(String input) => CsvDecoder().convert(input);
