@@ -1,6 +1,6 @@
 name: csv_ya
 description: Yet another CSV parser that you may want.
-version: 2.0.0
+version: 2.1.0
 homepage: https://github.com/kkazuo/csv_ya
 
 environment:

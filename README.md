@@ -16,6 +16,7 @@ Yet another CSV parser that you may want.
 ## Features
 
 - Tolerant quate escaping.
+- Streaming conversion for very large files.
 
 ## Usage
 

@@ -1,3 +1,8 @@
+## 2.1.0
+
+- Rewrite converter.
+- Add supports of streaming conversion.
+
 ## 2.0.0
 
 - Hide implementation details.
