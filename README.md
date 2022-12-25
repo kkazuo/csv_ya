@@ -21,6 +21,9 @@ Yet another CSV parser that you may want.
 ## Usage
 
 ```dart
-const input = 'a,b,c';
-final parsed = parseCsv(input);
+const input = 'a,b,c\n1,2,3';
+print(parseCsv(input));
+>>> [['a', 'b', 'c'], ['1', '2', '3']]
+print(parseCsvAsMap(input));
+>>> [{'a': '1', 'b': '2', 'c': '3'}]
 ```

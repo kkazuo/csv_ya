@@ -12,6 +12,88 @@ void main() {
       decoder = CsvDecoder();
     });
 
+    test('Map Converter Test', () async {
+      expect(
+        await Stream<String>.value('a,b,c\n')
+            .transform(CsvDecoder())
+            .transform(CsvIntoMap())
+            .expand((element) => element)
+            .toList(),
+        <Map<String, String>>[],
+      );
+      expect(
+          await Stream<String>.value('a,b,c\n1,2,3')
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2', 'c': '3'}
+          ]);
+      expect(
+          await Stream<String>.value('a,b,c\n1,2')
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2'}
+          ]);
+      expect(
+          await Stream<String>.value('a,b\n1,2,3')
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2'}
+          ]);
+      expect(
+          await Stream<String>.value('a,b,c\n1,2,3\n')
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2', 'c': '3'}
+          ]);
+      expect(
+          await Stream<String>.value('a,b,c\n1,2,3\n4,5,6')
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2', 'c': '3'},
+            {'a': '4', 'b': '5', 'c': '6'},
+          ]);
+      expect(
+          await Stream<String>.fromIterable(['a,b,c\n1,2,3\n4,5,6'])
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2', 'c': '3'},
+            {'a': '4', 'b': '5', 'c': '6'},
+          ]);
+      expect(
+          await Stream<String>.fromIterable(
+            ['a', ',b,', 'c\n1,2', ',3\n4,5,', '6'],
+          )
+              .transform(CsvDecoder())
+              .transform(CsvIntoMap())
+              .expand((element) => element)
+              .toList(),
+          [
+            {'a': '1', 'b': '2', 'c': '3'},
+            {'a': '4', 'b': '5', 'c': '6'},
+          ]);
+      expect(parseCsvAsMap('a,b,c\n1,2,3'), [
+        {'a': '1', 'b': '2', 'c': '3'},
+      ]);
+    });
+
     test('Decoder Test', () {
       expect(decoder.convert('a,b,c'), [
         ['a', 'b', 'c']
@@ -22,16 +104,14 @@ void main() {
     });
 
     test('Chunked Decoder Test', () async {
-      final c = StreamController<String>();
-      c.sink.add('a,b,c');
-      c.sink.close();
-
       expect(
-        await c.stream.transform(decoder).expand((element) => element).toList(),
+        await Stream<String>.value('a,b,c')
+            .transform(decoder)
+            .expand((element) => element)
+            .toList(),
         [
           ['a', 'b', 'c']
         ],
-        //throwsUnsupportedError,
       );
     });
 
@@ -59,6 +139,25 @@ void main() {
       ]);
       expect(parseCsv('"a" "b" ,b'), [
         ['a b', 'b']
+      ]);
+    });
+
+    test('Async Test', () async {
+      const input = 'a,b,c\n1,2,3\n';
+
+      expect(parseCsv(input), [
+        ['a', 'b', 'c'],
+        ['1', '2', '3'],
+      ]);
+      expect(await parseCsvAsync(Stream.value(input)), [
+        ['a', 'b', 'c'],
+        ['1', '2', '3'],
+      ]);
+      expect(parseCsvAsMap(input), [
+        {'a': '1', 'b': '2', 'c': '3'}
+      ]);
+      expect(await parseCsvAsMapAsync(Stream.value(input)), [
+        {'a': '1', 'b': '2', 'c': '3'}
       ]);
     });
 

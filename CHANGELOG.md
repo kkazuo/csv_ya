@@ -1,3 +1,7 @@
+## 2.1.1
+
+- Add mapped converters.
+
 ## 2.1.0
 
 - Rewrite converter.
