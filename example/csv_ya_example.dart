@@ -20,6 +20,8 @@ a , b , c
       .openRead()
       .transform(const Utf8Decoder())
       .transform(CsvDecoder())) {
-    print(s);
+    for (final r in s) {
+      print('|${r.join('|')}|');
+    }
   }
 }
