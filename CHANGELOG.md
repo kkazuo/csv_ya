@@ -1,3 +1,7 @@
+## 2.3.0
+
+- Add user specified header value arguments.
+
 ## 2.2.0
 
 - Add header words mapping option to `CsvIntoMap` .

@@ -134,6 +134,23 @@ void main() {
           ]);
     });
 
+    test('User Header Test', () async {
+      const value = 'a,b,c\n1,2,3\n';
+
+      expect(await parseCsvAsMapAsync(Stream.value(value)), [
+        {'a': '1', 'b': '2', 'c': '3'}
+      ]);
+      expect(
+          await parseCsvAsMapAsync(
+            Stream.value(value),
+            headers: ['x', 'y', 'z'],
+          ),
+          [
+            {'x': 'a', 'y': 'b', 'z': 'c'},
+            {'x': '1', 'y': '2', 'z': '3'}
+          ]);
+    });
+
     test('First Test', () {
       expect(parseCsv('a,b,c'), [
         ['a', 'b', 'c']

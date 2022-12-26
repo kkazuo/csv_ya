@@ -14,18 +14,22 @@ Future<Csv> parseCsvAsync(Stream<String> input) async =>
 /// Converts the given string [input] to its corresponding csv.
 CsvAsMap parseCsvAsMap(
   String input, {
+  List<String>? headers,
   Iterable<String> Function(List<String>)? headerConverter,
 }) =>
-    CsvIntoMap(headerConverter: headerConverter)
+    CsvIntoMap(headers: headers, headerConverter: headerConverter)
         .convert(CsvDecoder().convert(input));
 
 /// Converts the given string [input] to its corresponding csv.
 Future<CsvAsMap> parseCsvAsMapAsync(
   Stream<String> input, {
+  List<String>? headers,
   Iterable<String> Function(List<String>)? headerConverter,
 }) async =>
     input
         .transform(CsvDecoder())
-        .transform(CsvIntoMap(headerConverter: headerConverter))
+        .transform(
+          CsvIntoMap(headers: headers, headerConverter: headerConverter),
+        )
         .expand((element) => element)
         .toList();
