@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Add header words mapping option to `CsvIntoMap` .
+
 ## 2.1.1
 
 - Add mapped converters.

@@ -13,14 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:csv_ya/src/csv/types.dart';
 
-/// Convert CSV into Map
+/// Convert from list of list of string into list of map.
 class CsvIntoMap extends Converter<Csv, CsvAsMap> {
+  /// CsvIntoMap
+  CsvIntoMap({this.headerConverter});
+
+  /// Header line words converter.
+  final Iterable<String> Function(List<String>)? headerConverter;
+
   @override
   CsvAsMap convert(Csv input) {
     final res = <Map<String, String>>[];
@@ -30,6 +35,7 @@ class CsvIntoMap extends Converter<Csv, CsvAsMap> {
           res.addAll(x);
         }
       }),
+      headerConverter,
     )
       ..add(input)
       ..close();
@@ -38,21 +44,24 @@ class CsvIntoMap extends Converter<Csv, CsvAsMap> {
 
   @override
   Sink<Csv> startChunkedConversion(Sink<CsvAsMap> sink) {
-    return _Sink(sink);
+    return _Sink(sink, headerConverter);
   }
 }
 
 class _Sink extends ChunkedConversionSink<Csv> {
-  _Sink(this._sink);
+  _Sink(this._sink, this._headerConverter);
 
   final Sink<CsvAsMap> _sink;
+  final Iterable<String> Function(List<String>)? _headerConverter;
+
   List<String>? _header;
 
   @override
   void add(Csv chunk) {
     if (_header == null) {
       if (chunk.isEmpty) return;
-      _header = [...chunk[0]];
+      final hc = _headerConverter;
+      _header = hc == null ? [...chunk[0]] : [...hc(chunk[0])];
       _intoMap(_header!, chunk.skip(1));
     } else {
       _intoMap(_header!, chunk);

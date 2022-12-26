@@ -18,6 +18,33 @@ Yet another CSV parser that you may want.
 - Tolerant quate escaping.
 - Streaming conversion for very large files.
 
+## Motivation
+
+Have you ever seen a CSV like this:
+
+```csv
+x                              ,y
+   "  an"  "escaped"(string)   ,ok
+```
+
+Be attention the white space trimming and continuations of quote escaping.
+
+Most RFC4180 compliant CSV parsers fails to parse this.
+
+But these data are so many in the wild where I live.
+So I made this library.
+
+We can parse this to:
+
+```json
+[
+  {
+    "x": "  an  escaped(string)",
+    "y": "ok"
+  }
+]
+```
+
 ## Usage
 
 ```dart

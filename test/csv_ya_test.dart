@@ -115,6 +115,25 @@ void main() {
       );
     });
 
+    test('Header Map Test', () async {
+      const value = 'a,b,c\n1,2,3\n';
+
+      expect(
+          await Stream.value(value)
+              .transform(decoder)
+              .transform(
+                CsvIntoMap(
+                  headerConverter: (h) =>
+                      h.asMap().keys.map((i) => '${h[i]}${h[i]}$i').toList(),
+                ),
+              )
+              .expand((e) => e)
+              .toList(),
+          [
+            {'aa0': '1', 'bb1': '2', 'cc2': '3'}
+          ]);
+    });
+
     test('First Test', () {
       expect(parseCsv('a,b,c'), [
         ['a', 'b', 'c']
