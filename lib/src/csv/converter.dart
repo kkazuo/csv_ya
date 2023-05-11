@@ -49,7 +49,7 @@ class _Str {
   String toString() => '$str $escaped';
 }
 
-class _Sink extends ChunkedConversionSink<String> {
+class _Sink implements ChunkedConversionSink<String> {
   _Sink(this._sink);
 
   final Sink<List<List<String>>> _sink;

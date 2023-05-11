@@ -54,7 +54,7 @@ class CsvIntoMap extends Converter<Csv, CsvAsMap> {
   }
 }
 
-class _Sink extends ChunkedConversionSink<Csv> {
+class _Sink implements ChunkedConversionSink<Csv> {
   _Sink(this._sink, this._headerConverter, this._headers);
 
   final Sink<CsvAsMap> _sink;
