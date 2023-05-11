@@ -1,3 +1,7 @@
+## 2.4.0
+
+- Supports Dart 3
+
 ## 2.3.0
 
 - Add user specified header value arguments.
